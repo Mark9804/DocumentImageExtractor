@@ -2,7 +2,7 @@
 
 提取Office 2007+创建的文档中的图片。
 
-[English](https://github.com/Mark9804/OfficeImageExtractor/blob/master/README_en.py)
+[English](https://github.com/Mark9804/OfficeImageExtractor/blob/master/README_en.md)
 
 ## 功能
 
