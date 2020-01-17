@@ -7,8 +7,10 @@ import subprocess
 from re import sub
 from pymsgbox import alert
 from locale import getdefaultlocale
+from platform import system
 
 UserLocale = 'undefined'
+UserSystem = system()
 #########错误信息#########
 errormsg_international = {
     'ErrorOnLoad': 'Drag & drop an Microsoft Office file on me:(',
@@ -55,27 +57,40 @@ def error(errorcode):
     return errormsg[str(errorcode)]
 
 
+def openinexplorer(distpath):
+    # distpath = sub(' ', '\ ', distpath)
+    if UserSystem == 'Windows':
+        subprocess.Popen('explorer "' + distpath + '"', shell=False)
+    elif UserSystem == 'Darwin':
+        subprocess.call(["open", distpath])
+    elif UserSystem == 'Linux':
+        try:
+            subprocess.Popen('nautilus "' + distpath + '"', shell=False)
+        except:
+            pass
+
+
 def office2pic(OfficeDocPath, ZipFilePath, TempPath, StorePath, FileType):
     # 清理现场。NoMedia表示不含任何媒体文件，连最终文件夹一起删掉。
     def clean(NoMedia=False):
         try:
-            subprocess.call('rm -rf "' + TempPath + '"', shell=True)
+            subprocess.call(rmCommand + TempPath + '"', shell=True)
         except FileNotFoundError:
             # 如果删除失败，就打开临时文件夹让用户自己删除
             alert(error('ErrorOnRemoveTemp') + ' "' + str(TempPath) + '" ' + error('ErrorOnRemoveManual'),
                   error('ErrorOnRemoveTitle'))
-            with open(str(TempPath + '/' + error('ErrorOnRemoveTip')), 'w'):
+            with open(str(TempPath + separator + error('ErrorOnRemoveTip')), 'w'):
                 pass
-            subprocess.call(["open", StorePath])
+            # subprocess.Popen('explorer "' + TempPath + '"', shell=False)
         if NoMedia:
             try:
-                subprocess.call('rm -rf "' + StorePath + '"', shell=True)
+                subprocess.call(rmCommand + StorePath + '"', shell=True)
             except FileNotFoundError:
                 alert(error('ErrorOnRemoveEmpty') + ' "' + str(StorePath) + '" ' + error('ErrorOnRemoveManual'),
                       error('ErrorOnRemoveEmptyTitle'))
-                with open(str(TempPath + '/' + error('ErrorOnRemoveTip')), 'w'):
+                with open(str(TempPath + separator + error('ErrorOnRemoveTip')), 'w'):
                     pass
-                subprocess.call(["open", StorePath])
+                openinexplorer(StorePath)
 
     shutil.copy(OfficeDocPath, ZipFilePath)  # 创建副本并修改后缀名为.zip
     file = zipfile.ZipFile(ZipFilePath, 'r')
@@ -86,7 +101,7 @@ def office2pic(OfficeDocPath, ZipFilePath, TempPath, StorePath, FileType):
 
     # 复制相关文件夹的图片至目标文件夹
     try:
-        pictures = os.listdir(os.path.join(TempPath + '/' + FileType + '/media'))
+        pictures = os.listdir(os.path.join(TempPath + separator + FileType + separator + 'media'))
     # 如果找不到media文件夹，说明没有媒体文件。删掉创建的文件夹之后报错退出
     except FileNotFoundError:
         alert(error('ErrorNoMediaFile'), error('ErrorNoMediaFileTitle'))
@@ -94,9 +109,9 @@ def office2pic(OfficeDocPath, ZipFilePath, TempPath, StorePath, FileType):
         quit()
     # 191117: 这一步和下一步当中的rmdir不能正确处理带空格文件！！！ ——191203:虽然不知道为什么，但是现在可以了
     for picture in pictures:
-        shutil.copy(os.path.join(TempPath + '/' + FileType + '/media/', picture), StorePath)
+        shutil.copy(os.path.join(TempPath + separator + FileType + separator + 'media' + separator, picture), StorePath)
     clean()
-    subprocess.call(["open", StorePath])
+    openinexplorer(StorePath)
 
 
 def makestorepath(InputFilePath):
@@ -114,7 +129,16 @@ if __name__ == '__main__':
     except:
         alert(error('ErrorOnLoad'), error('ErrorOnLoadTitle'))
         quit()
-    temp_path = os.path.join(str(os.getcwd()) + '/temp')
+
+    # 获取用户系统
+    if UserSystem == 'Darwin' or UserSystem == 'Linux':
+        separator = '/'
+        rmCommand = 'rm -rf "'
+    elif UserSystem == 'Windows':
+        separator = '\\'
+        rmCommand = 'rmdir /s /q "'
+
+    temp_path = os.path.join(str(os.getcwd()) + separator + 'temp')
     # Done: 抽象化设置路径流程，使用re.sub解决strip误伤问题
     if str(path)[-5:] == '.docx':
         zip_filepath, store_path = makestorepath(sys.argv[1])
