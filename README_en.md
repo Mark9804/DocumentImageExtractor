@@ -35,8 +35,10 @@ Drag & drop a document onto the [executable](https://github.com/Mark9804/OfficeI
 ## TODO
 
 - [ ] Add batch file support
-- [ ] Mac port\*
+- [x] Mac port\*
 - [ ] Add support for Office 97-2003 doucments\*\*
+- [ ] Cross-platform script
+- [ ] 
 
 \* The script uses Windows batch commands to delete and open folders, thus cannot be ported to \*Unix platforms directly.
 
