@@ -13,7 +13,8 @@ UserLocale = 'undefined'
 UserSystem = system()
 #########错误信息#########
 errormsg_international = {
-    'ErrorOnLoad': 'Drag & drop an Microsoft Office file on me:(',
+    'ErrorOnLoadWindows': 'Drag & drop an Microsoft Office file on me:(',
+    'ErrorOnLoadUnix': 'Usage: python3 [path_to_script.py] [path_to_file]',
     'ErrorOnLoadTitle': 'OfficeImageExtractor: Error Occurred',
     'ErrorOldOfficeFormat': 'Earlier Office format file is not supported yet:( Try saving as ',
     'ErrorOldOfficeFormatSuffix': ' file and then retry.',
@@ -28,7 +29,8 @@ errormsg_international = {
 }
 
 errormsg_cn = {
-    'ErrorOnLoad': '请将一个Office文档拖拽至程序上，然后松开鼠标左键',
+    'ErrorOnLoadWindows': '请将一个Office文档拖拽至程序上，然后松开鼠标左键',
+    'ErrorOnLoadUnix': '用法：python3 [脚本路径.py] [文件路径]',
     'ErrorOnLoadTitle': 'OfficeImageExtractor: 错误发生',
     'ErrorOldOfficeFormat': '暂时不支持较早格式的Office文档。请尝试转换为',
     'ErrorOldOfficeFormatSuffix': '格式后重试。',
@@ -126,8 +128,11 @@ def makestorepath(InputFilePath):
 if __name__ == '__main__':
     try:
         path = sys.argv[1]
-    except:
-        alert(error('ErrorOnLoad'), error('ErrorOnLoadTitle'))
+    except:   
+        if UserSystem == 'Darwin' or UserSystem == 'Linux':
+            alert(error('ErrorOnLoadUnix'), error('ErrorOnLoadTitle'))
+        elif UserSystem == 'Windows':
+            alert(error('ErrorOnLoadWindows'), error('ErrorOnLoadTitle'))
         quit()
 
     # 获取用户系统
