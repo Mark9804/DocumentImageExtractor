@@ -35,11 +35,8 @@ Drag & drop a document onto the [executable](https://github.com/Mark9804/OfficeI
 ## TODO
 
 - [ ] Add batch file support
-- [x] Mac port\*
+- [x] Mac port
 - [ ] Add support for Office 97-2003 doucments\*\*
-- [ ] Cross-platform script
-- [ ] 
-
-\* The script uses Windows batch commands to delete and open folders, thus cannot be ported to \*Unix platforms directly.
+- [x] Cross-platform script
 
 \*\*The way Office 97-2003 documents save their media file is quite different from Office 07-2016 format. I haven’t figured out how the old format does the work.
