@@ -1,12 +1,12 @@
-# OfficeImageExtractor
+# DocumentImageExtractor
 
-提取Office 2007+创建的文档中的图片。
+提取多类文档中的图片。/ Extract images embedded in various kinds of documents.
 
 [English](https://github.com/Mark9804/OfficeImageExtractor/blob/master/README_en.md)
 
 ## 功能
 
-提取Office 2007及更新的Office程序创建的文档（docx, pptx, xlsx）中的图片。也许能提取视频，我没试过。
+提取Office 2007及更新的Office程序创建的文档（docx, pptx, xlsx）以及PDF中的图片。
 
 ## 原理
 
@@ -20,11 +20,13 @@ Office 2007及更新的Office文档会将媒体文件保存至`[对应格式]\me
 | PowerPoint          | ~\ppt\media  |
 | Excel               | ~\xl\media   |
 
+Adobe PDF使用XREF进行标识，需要读取图像元数据然后使用pillow还原。
+
 ## 使用
 
 ###  1. 命令行调用
 
-`python OfficeImageExtractor.py 文件绝对路径`
+`python DocumentImageExtractor.py 文件绝对路径`
 
 ###  2. 使用可执行程序
 
@@ -38,5 +40,6 @@ Office 2007及更新的Office文档会将媒体文件保存至`[对应格式]\me
 - [x] Mac移植
 - [ ] 支持Office 97-2003文档\*\*
 - [x] 跨平台脚本
+- [x] PDF文档支持
 
 \*\* Office 97-2003文档储存媒体文件的方式不同于Office 2007+版本。我还不知道是这些文档如何储存媒体文件的。
