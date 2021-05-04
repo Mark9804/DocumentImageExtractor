@@ -152,7 +152,7 @@ def makestorepath(InputFilePath):
             os.mkdir(storepath)
         return zippath, storepath
     else:
-        storepath = sub(r'(?i).pdf$', '', InputFilePath)
+        storepath = sub(r'(?i)\.pdf$', '', InputFilePath)
         if not os.path.exists(storepath):
             os.mkdir(storepath)
         return storepath
